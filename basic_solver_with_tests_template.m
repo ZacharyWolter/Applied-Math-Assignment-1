@@ -45,6 +45,10 @@ end
 function x = bisection_solver(fun,x_left,x_right)
     x = (x_left + x_right)/2;
     f_mid = fun(x);
+    if fun(x_left) * fun(x_right) > 0 % exit if bad initial guess
+        fprintf('ERROR: Initial guess does not include zero-crossing')
+        return;
+    end
     while ~((-1e-10 < f_mid) && (f_mid < 1e-10))
         if fun(x_left) * f_mid < 0
             x_right = x;
