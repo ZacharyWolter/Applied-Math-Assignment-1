@@ -8,33 +8,17 @@ function basic_solver_with_tests_template()
     plot(xvals,yvals,'r','linewidth',2);
     plot(xvals,0*xvals,'k--','linewidth',1);
     xlabel('x'); ylabel('y'); title('Test Function 1');
-
-    % %Newton's method example test
-    % x0_guess = 2;
-    % plot(x0_guess,test_func01(x0_guess),'bo','markerfacecolor','b','markersize',5);
-    % 
-    % x_sol = newton_solver(@test_func01,x0_guess);
-    % plot(x_sol,test_func01(x_sol),'go','markerfacecolor','g','markersize',5);
     
 
     %Secant method example test
-    % x0_guess = -5;
-    % x1_guess = 2;
-    % plot(x0_guess,test_func01(x0_guess),'bo','markerfacecolor','b','markersize',5);
-    % plot(x1_guess,test_func01(x1_guess),'ko','markerfacecolor','k','markersize',5);
-    % 
-    % x_sol = secant_solver(@test_func01,x0_guess,x1_guess);
-    % plot(x_sol,test_func01(x_sol),'go','markerfacecolor','g','markersize',5);
+    x0_guess = -5;
+    x1_guess = 2;
+    plot(x0_guess,test_func01(x0_guess),'bo','markerfacecolor','b','markersize',5);
+    plot(x1_guess,test_func01(x1_guess),'ko','markerfacecolor','k','markersize',5);
 
-    
-    %Bisection method example test
-    % x_left = -5;
-    % x_right = 2;
-    % plot(x_left,test_func01(x_left),'bo','markerfacecolor','b','markersize',5);
-    % plot(x_right,test_func01(x_right),'ko','markerfacecolor','k','markersize',5);
-    % 
-    % x_sol = bisection_solver(@test_func01,x_left,x_right);
-    % plot(x_sol,test_func01(x_sol),'go','markerfacecolor','g','markersize',5);
+    x_sol = secant_solver(@test_func01,x0_guess,x1_guess);
+    plot(x_sol,test_func01(x_sol),'go','markerfacecolor','g','markersize',5);
+
 end
 
 
@@ -58,8 +42,33 @@ function x = newton_solver(fun,x0)
     x = x0+1; %this is just dummy code. replace this with your code
 end
 
-function x = secant_solver(fun,x0, x1)
-    x = x0+1; %this is just dummy code. replace this with your code
+function x = secant_solver(fun, x0, x1)
+    x_nminus1 = x1;
+    x_nminus2 = x0;
+
+    while true
+        [f1, ~] = fun(x_nminus1);
+        [f2, ~] = fun(x_nminus2);
+
+        x_n = x_nminus1 - f2 * ((x_nminus1 - x_nminus2)/(f1 - f2))
+    
+        if (x_nminus1 - x_n) < 1e-4
+            x = x_n;
+            break
+        end
+
+        if (f1 - f2) < 1e-3
+            disp('Error: Denominator in update step is zero')
+            break
+        end
+
+        if abs(x_n - x_nminus1) > 100
+            disp('Error: Updated stepsize is huge')
+        end
+        
+        x_nminus2 = x_nminus1;
+        x_nminus1 = x_n;
+    end
 end
 
 
