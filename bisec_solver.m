@@ -63,5 +63,5 @@ end
 
 function x = secant_solver(fun,x0, x1)
     x = x0+1; %this is just dummy code. replace this with your code
-    %hi
+    %hi a
 end
