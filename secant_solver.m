@@ -11,9 +11,10 @@
 %OUTPUTS
 %   x: estimate for root of fun
 %   exit_flag: an integer indicating whether or not the solver succeeded
-function [x, exit_flag] = secant_solver(fun, x0, x1, dxtol, ftol, max_iter, dxmax)
+function [x, exit_flag, guesses] = secant_solver(fun, x0, x1, dxtol, ftol, max_iter, dxmax)
     f0 = fun(x0);
     f1 = fun(x1);
+    guesses = [x0, x1];
     
     for i = 1:max_iter
         if abs(f1 - f0) < 1e-15 || abs(f1 - f0) > dxmax
@@ -23,6 +24,7 @@ function [x, exit_flag] = secant_solver(fun, x0, x1, dxtol, ftol, max_iter, dxma
         
         x2 = x1 - f1 * ((x1 - x0) / (f1 - f0));
         f2 = fun(x2);
+        guesses(end+1) = x2;
         
         if abs(f2) < ftol || abs(x2 - x1) < dxtol
             x = x2;
