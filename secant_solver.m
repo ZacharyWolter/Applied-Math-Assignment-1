@@ -15,7 +15,7 @@ function [x, exit_flag, guesses] = secant_solver(fun, x0, x1, dxtol, ftol, max_i
     f0 = fun(x0);
     f1 = fun(x1);
     guesses = [x0, x1];
-    
+    %hi
     for i = 1:max_iter
         if abs(f1 - f0) < 1e-15 || abs(f1 - f0) > dxmax
             exit_flag = -1;
