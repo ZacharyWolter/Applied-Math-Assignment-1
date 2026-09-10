@@ -96,12 +96,12 @@ function convergence_experiment_template()
 
     % Plot
     figure;
-    loglog(e_n, e_n_1, 'r.', 'MarkerSize', 4); hold on;
-    loglog(e_n_filt, e_n_1_filt, 'b.', 'MarkerSize', 4);
+    loglog(e_n, e_n_1, 'r.', 'MarkerSize', 6); hold on;
+    loglog(e_n_filt, e_n_1_filt, 'b.', 'MarkerSize', 8);
 
     fit_x = 10.^linspace(-14, -2, 100);
     fit_y = k_measured * (fit_x .^ p_measured);
-    loglog(fit_x, fit_y, 'k-', 'LineWidth', 2);
+    loglog(fit_x, fit_y, 'k-', 'LineWidth', 1.7);
     xlabel('\epsilon_n (-)'); ylabel('\epsilon_{n+1} (-)');
     title(sprintf('Convergence Analysis (p = %.2f, k = %.2f)', p_measured, k_measured));
     legend('Raw Data', 'Filtered Data', 'Fit Line', 'Location', 'northwest');
