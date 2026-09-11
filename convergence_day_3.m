@@ -1,15 +1,17 @@
 function convergence_day_3()
     close all 
-    % Target root reference
-    x0_ref = 26;
-    target_root = fzero(@test_func03, x0_ref);
+    x0_ref = 20;
+    desired_func = @test_func03;
+    
+    % Target root reference 
+    target_root = fzero(desired_func, x0_ref);
 
     % Create instance of input_recorder
     my_recorder = input_recorder();
-    f_record = my_recorder.generate_recorder_fun(@test_func03);
+    f_record = my_recorder.generate_recorder_fun(desired_func);
 
     num_iter = 50;
-    solver_flag = 1;
+    solver_flag = 2;
 
     % Solver tolerances
     dxtol = 1e-14;
@@ -19,8 +21,8 @@ function convergence_day_3()
     x_range = 20;
 
     % Initial guesses for trials
-    x0_list = linspace(x0_ref - x_range, x0_ref + x_range, num_iter);
-    x1_list = linspace(x0_ref - x_range+1, x0_ref + x_range+1, num_iter);
+    x0_list = linspace(target_root - x_range, target_root + x_range, num_iter);
+    x1_list = linspace(target_root - x_range+1, target_root + x_range+1, num_iter);
 
     x_left_list = linspace(target_root - x_range + 1, target_root + x_range + 1, num_iter);
     x_right_list = linspace(target_root - x_range, target_root + x_range, num_iter);
@@ -28,7 +30,8 @@ function convergence_day_3()
     [x_left, x_right] = meshgrid(x_left_list, x_right_list);
     [x0, x1] = meshgrid(x0_list, x1_list);
 
-    y_list = test_func03(x0_list);
+    % Evaluate function over x0_list for plotting
+    y_list = desired_func(x0_list);
 
     x_current_list = [];
     x_next_list = [];
@@ -47,7 +50,7 @@ function convergence_day_3()
     % Data collection
     for n = 1:num_iter^2
         if solver_flag == 1
-            [~, exit_flag, guess] = bisection_solver(@test_func03, x_left(n), x_right(n), dxtol, ftol, max_iter);
+            [~, exit_flag, guess] = bisection_solver(desired_func, x_left(n), x_right(n), dxtol, ftol, max_iter);
 
             if exit_flag == 1 && length(guess) >= 2
                 x_left_success(end+1) = x_left(n);
@@ -66,13 +69,13 @@ function convergence_day_3()
 
             if exit_flag == 1 && length(input_list) >= 2
                 x0_success(end+1) = x0(n);
-                y0_success(end+1) = test_func03(x0(n));
+                y0_success(end+1) = desired_func(x0(n));
                 x_current_list = [x_current_list, input_list(1:end-1)];
                 x_next_list = [x_next_list, input_list(2:end)];
                 index_list = [index_list, 1:length(input_list)-1];
             else
                 x0_fail(end+1) = x0(n);
-                y0_fail(end+1) = test_func03(x0(n));
+                y0_fail(end+1) = desired_func(x0(n));
             end
         elseif solver_flag == 3
             my_recorder.clear_input_list();
@@ -96,13 +99,13 @@ function convergence_day_3()
             input_list = my_recorder.get_input_list();
             if exit_flag == 1 && length(input_list) >= 2
                 x0_success(end+1) = x0(n);
-                y0_success(end+1) = test_func03(x0(n));
+                y0_success(end+1) = desired_func(x0(n));
                 x_current_list = [x_current_list, input_list(1:end-1)];
                 x_next_list = [x_next_list, input_list(2:end)];
                 index_list = [index_list, 1:length(input_list)-1];
             else
                 x0_fail(end+1) = x0(n);
-                y0_fail(end+1) = test_func03(x0(n));
+                y0_fail(end+1) = desired_func(x0(n));
             end
         end
     end
@@ -122,7 +125,7 @@ function convergence_day_3()
         xlabel('x');
         ylabel('y');
         title('Convergence Map of Newton Solver');
-        legend('Test Function', 'Converged', 'Failed', location='southeast');
+        legend('Test Function', 'Converged', 'Failed', 'Location', 'southeast');
     elseif solver_flag == 3
         plot(x0_success, x1_success, 'bo','MarkerFaceColor','b'); hold on
         plot(x0_fail, x1_fail, 'ro','markerfacecolor','r');
@@ -137,7 +140,7 @@ function convergence_day_3()
         xlabel('x');
         ylabel('y');
         title('Convergence Map of fzero() solver');
-        legend('Test Function', 'Converged', 'Failed', location='southeast');
+        legend('Test Function', 'Converged', 'Failed', 'Location', 'southeast');
     end
 
     % Calculate raw error using sequence history
@@ -162,17 +165,43 @@ function convergence_day_3()
 
     fprintf('Measured Order of Convergence (p): %.4f\n', p_measured);
     fprintf('Measured Error Constant (k): %.4f\n', k_measured);
+
+    % Predicted Values Calculation & Display
+    if solver_flag == 2
+        p_predicted = 2.0; 
+        
+        h_deriv = 1e-5;
+        [~, df_plus] = desired_func(target_root + h_deriv);
+        [~, df_minus] = desired_func(target_root - h_deriv);
+        d2f_root = (df_plus - df_minus) / (2 * h_deriv);
+        [~, df_root] = desired_func(target_root);
+        k_predicted = abs(d2f_root) / (2 * abs(df_root));
+
+        fprintf('Predicted Order of Convergence (p): %.4f\n', p_predicted);
+        fprintf('Predicted Error Constant (k): %.4f\n', k_predicted);
+
+    elseif solver_flag == 3
+        p_predicted = (1 + sqrt(5)) / 2; 
+        
+        fprintf('Predicted Order of Convergence (p): %.4f\n', p_predicted);
+    end
+end
+
+%Quadratic function with root at the minimum
+function [f_val,dfdx] = test_func02(x)
+    f_val = (x-37.879).^2;
+    dfdx = 2*(x-37.879);
 end
 
 %Example sigmoid function
 function [f_val,dfdx] = test_func03(x)
-a = 27.3; b = 2; c = 8.3; d =-3;
-H = exp((x-a)/b);
-dH = H/b;
-L = 1+H;
-dL = dH;
-f_val = c*H./L+d;
-dfdx = c*(L.*dH-H.*dL)./(L.^2);
+    a = 27.3; b = 2; c = 8.3; d = -3;
+    H = exp((x-a)/b);
+    dH = H/b;
+    L = 1+H;
+    dL = dH;
+    f_val = c*H./L+d;
+    dfdx = c*(L.*dH-H.*dL)./(L.^2);
 end
 
 % Multilinear regression helper function
