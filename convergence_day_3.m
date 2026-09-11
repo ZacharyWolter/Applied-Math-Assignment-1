@@ -9,7 +9,7 @@ function convergence_day_3()
     f_record = my_recorder.generate_recorder_fun(@test_func03);
 
     num_iter = 50;
-    solver_flag = 3;
+    solver_flag = 2;
 
     % Solver tolerances
     dxtol = 1e-14;
@@ -60,14 +60,29 @@ function convergence_day_3()
                 x_right_fail(end+1) = x_right(n);
             end
 
+        elseif solver_flag == 2
         
+            my_recorder.clear_input_list();
+        
+            [x_root, exit_flag, guess] = newton_solver( ...
+                f_record, x0(n), dxtol, ftol, max_iter, dxmax);
+        
+            if exit_flag == 1
+                x0_success(end+1) = x0(n);
+                x1_success(end+1) = x1(n);
+        
+            else
+                x0_fail(end+1) = x0(n);
+                x1_fail(end+1) = x1(n);
+            end
+
         elseif solver_flag == 3
             [x_root, exit_flag, guess] = secant_solver(f_record, x0(n), x1(n), dxtol, ftol, max_iter, dxmax);
 
             input_list = my_recorder.get_input_list();
 
             if exit_flag == 1 && length(input_list) >= 2
-                 x0_success(end+1) = x0(n);
+                x0_success(end+1) = x0(n);
                 x1_success(end+1) = x1(n);
             elseif exit_flag == 0 || exit_flag == -1
                 x0_fail(end+1) = x0(n);
@@ -94,7 +109,9 @@ function convergence_day_3()
         plot(x_left_success, x_right_success, 'bo','MarkerFaceColor','b');
 
     elseif solver_flag == 2
+
     
+
     elseif solver_flag == 3
     plot(x0_fail, x1_fail, 'ro','markerfacecolor','r'); hold on
     plot(x0_success, x1_success, 'bo','MarkerFaceColor','b');
