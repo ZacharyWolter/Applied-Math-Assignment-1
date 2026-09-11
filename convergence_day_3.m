@@ -9,7 +9,7 @@ function convergence_day_3()
     f_record = my_recorder.generate_recorder_fun(@test_func03);
 
     num_iter = 50;
-    solver_flag = 2;
+    solver_flag = 1;
 
     % Solver tolerances
     dxtol = 1e-14;
@@ -27,6 +27,8 @@ function convergence_day_3()
 
     [x_left, x_right] = meshgrid(x_left_list, x_right_list);
     [x0, x1] = meshgrid(x0_list, x1_list);
+
+    y_list = test_func03(x0_list);
 
     x_current_list = [];
     x_next_list = [];
@@ -107,33 +109,35 @@ function convergence_day_3()
 
     figure;
     if solver_flag == 1
-        plot(x_left_fail, x_right_fail, 'ro','markerfacecolor','r'); hold on
-        plot(x_left_success, x_right_success, 'bo','MarkerFaceColor','b');
-        xlabel('Left Guess');
-        ylabel('Right Guess');
-        title('Bisection Solver');
-        legend('Failed', 'Converged');
+        plot(x_left_success, x_right_success, 'bo','MarkerFaceColor','b'); hold on
+        plot(x_left_fail, x_right_fail, 'ro','markerfacecolor','r'); 
+        xlabel('Guess 1');
+        ylabel('Guess 2');
+        title('Convergence Map of Bisection Solver');
+        legend('Converged', 'Failed');
     elseif solver_flag == 2
-        plot(x0_success, y0_success, 'bo', 'MarkerFaceColor', 'b'); hold on
+        plot(x0_list, y_list, 'LineWidth', 2, 'Color', 'k'); hold on
+        plot(x0_success, y0_success, 'bo', 'MarkerFaceColor', 'b'); 
         plot(x0_fail, y0_fail, 'ro','markerfacecolor','r');
-        xlabel('Initial Guess');
-        ylabel('Next Guess');
-        title('Newton Solver');
-        legend('Newton');
+        xlabel('x');
+        ylabel('y');
+        title('Convergence Map of Newton Solver');
+        legend('Test Function', 'Converged', 'Failed', location='southeast');
     elseif solver_flag == 3
-        plot(x0_fail, x1_fail, 'ro','markerfacecolor','r'); hold on
-        plot(x0_success, x1_success, 'bo','MarkerFaceColor','b');
+        plot(x0_success, x1_success, 'bo','MarkerFaceColor','b'); hold on
+        plot(x0_fail, x1_fail, 'ro','markerfacecolor','r');
         xlabel('First Guess');
         ylabel('Second Guess');
-        title('Secant Solver');
-        legend('Failed', 'Converged');
+        title('Convergence Map of Secant Solver');
+        legend('Converged', 'Failed');
     elseif solver_flag == 4
+        plot(x0_list, y_list, 'LineWidth', 2, 'Color', 'k'); hold on
         plot(x0_success, y0_success, 'bo', 'MarkerFaceColor', 'b'); hold on
         plot(x0_fail, y0_fail, 'ro','markerfacecolor','r');
-        xlabel('Current Guess');
-        ylabel('Next Guess');
-        title('fzero Solver');
-        legend('fzero');
+        xlabel('x');
+        ylabel('y');
+        title('Convergence Map of fzero() solver');
+        legend('Test Function', 'Converged', 'Failed', location='southeast');
     end
 
     % Calculate raw error using sequence history
