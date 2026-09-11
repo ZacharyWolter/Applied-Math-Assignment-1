@@ -16,7 +16,7 @@ function convergence_day_3()
     ftol = 1e-14;
     max_iter = 200;
     dxmax = 1e10;
-    x_range = 100;
+    x_range = 20;
 
     % Initial guesses for trials
     x0_list = linspace(x0_ref - x_range, x0_ref + x_range, num_iter);
@@ -55,6 +55,18 @@ function convergence_day_3()
                 x_left_fail(end+1) = x_left(n);
                 x_right_fail(end+1) = x_right(n);
             end      
+        elseif solver_flag == 2
+        
+            [~, exit_flag, ~] = newton_solver( ...
+                f_record, x0(n), dxtol, ftol, max_iter, dxmax);
+        
+            if exit_flag == 1
+                x0_success(end+1) = x0(n);
+                y0_success(end+1) = test_func03(x0(n));
+            else
+                x0_fail(end+1) = x0(n);
+                y0_fail(end+1) = test_func03(x0(n));
+            end
         elseif solver_flag == 3
             [~, exit_flag, ~] = secant_solver(f_record, x0(n), x1(n), dxtol, ftol, max_iter, dxmax);
 
