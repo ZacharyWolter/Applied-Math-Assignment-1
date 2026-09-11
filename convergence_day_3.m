@@ -9,7 +9,7 @@ function convergence_day_3()
     f_record = my_recorder.generate_recorder_fun(@test_func03);
 
     num_iter = 250;
-    solver_flag = 4;
+    solver_flag = 2;
 
     % Solver tolerances
     dxtol = 1e-14;
@@ -75,7 +75,7 @@ function convergence_day_3()
             end
             else
             x0_fail(end+1) = x0(n);
-            y0_fail(end_1) = test_func03(x0(n));
+            y0_fail(end+1) = test_func03(x0(n));
         end
     end
 
@@ -84,7 +84,8 @@ function convergence_day_3()
         plot(x_left_fail, x_right_fail, 'ro','markerfacecolor','r'); hold on
         plot(x_left_success, x_right_success, 'bo','MarkerFaceColor','b');
     elseif solver_flag == 2
-        
+        plot(x0_success, y0_success, 'bo', 'MarkerFaceColor', 'b'); hold on
+        plot(x0_fail, y0_fail, 'ro','markerfacecolor','r');
     elseif solver_flag == 3
         plot(x0_fail, x1_fail, 'ro','markerfacecolor','r'); hold on
         plot(x0_success, x1_success, 'bo','MarkerFaceColor','b');
