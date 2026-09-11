@@ -9,14 +9,14 @@ function convergence_day_3()
     f_record = my_recorder.generate_recorder_fun(@test_func03);
 
     num_iter = 50;
-    solver_flag = 1;
+    solver_flag = 4;
 
     % Solver tolerances
     dxtol = 1e-14;
     ftol = 1e-14;
     max_iter = 200;
     dxmax = 1e10;
-    x_range = 20;
+    x_range = 50;
 
     % Initial guesses for trials
     x0_list = linspace(x0_ref - x_range, x0_ref + x_range, num_iter);
