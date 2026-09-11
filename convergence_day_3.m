@@ -95,17 +95,34 @@ function convergence_day_3()
     if solver_flag == 1
         plot(x_left_fail, x_right_fail, 'ro','markerfacecolor','r'); hold on
         plot(x_left_success, x_right_success, 'bo','MarkerFaceColor','b');
+        xlabel('Left Guess');
+        ylabel('Right Guess');
+        title('Bisection Solver');
+        legend('Failed', 'Converged');
     elseif solver_flag == 2
         plot(x0_success, y0_success, 'bo', 'MarkerFaceColor', 'b'); hold on
         plot(x0_fail, y0_fail, 'ro','markerfacecolor','r');
+        xlabel('Initial Guess');
+        ylabel('Next Guess');
+        title('Newton Solver');
+        legend('Newton');
     elseif solver_flag == 3
         plot(x0_fail, x1_fail, 'ro','markerfacecolor','r'); hold on
         plot(x0_success, x1_success, 'bo','MarkerFaceColor','b');
+        xlabel('First Guess');
+        ylabel('Second Guess');
+        title('Secant Solver');
+        legend('Failed', 'Converged');
     elseif solver_flag == 4
         plot(x0_success, y0_success, 'bo', 'MarkerFaceColor', 'b'); hold on
         plot(x0_fail, y0_fail, 'ro','markerfacecolor','r');
+        xlabel('Current Guess');
+        ylabel('Next Guess');
+        title('fzero Solver');
+        legend('fzero');
     end
 end
+
 
 
 
