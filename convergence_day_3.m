@@ -162,6 +162,32 @@ function convergence_day_3()
 
     fprintf('Measured Order of Convergence (p): %.4f\n', p_measured);
     fprintf('Measured Error Constant (k): %.4f\n', k_measured);
+
+    % Predicted Values Calculation & Display
+    if solver_flag == 2
+        p_predicted = 2.0; 
+        
+        h_deriv = 1e-5;
+        [~, df_plus] = desired_func(target_root + h_deriv);
+        [~, df_minus] = desired_func(target_root - h_deriv);
+        d2f_root = (df_plus - df_minus) / (2 * h_deriv);
+        [~, df_root] = desired_func(target_root);
+        k_predicted = abs(d2f_root) / (2 * abs(df_root));
+
+        fprintf('Predicted Order of Convergence (p): %.4f\n', p_predicted);
+        fprintf('Predicted Error Constant (k): %.4f\n', k_predicted);
+
+    elseif solver_flag == 3
+        p_predicted = (1 + sqrt(5)) / 2; 
+        
+        fprintf('Predicted Order of Convergence (p): %.4f\n', p_predicted);
+    end
+end
+
+%Quadratic function with root at the minimum
+function [f_val,dfdx] = test_func02(x)
+    f_val = (x-37.879).^2;
+    dfdx = 2*(x-37.879);
 end
 
 %Example sigmoid function
