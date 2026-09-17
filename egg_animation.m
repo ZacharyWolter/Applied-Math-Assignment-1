@@ -26,10 +26,10 @@ fig1 = figure(1);
 
 %set up the plotting axis
 hold on; axis equal; axis square
-axis([-1,35,-1,30])
+axis([y_ground-1,x_wall+5,y_ground-1,x_wall])
 
-plot([-1,35],[y_ground,y_ground],'k','LineWidth',2);
-plot([x_wall,x_wall],[y_ground,30],'k','LineWidth',2);
+plot([y_ground-1,x_wall+5],[y_ground,y_ground],'k','LineWidth',2);
+plot([x_wall,x_wall],[y_ground,x_wall],'k','LineWidth',2);
 
 %initialize the plot of the egg
 egg_plot = plot(0,0,'k','LineWidth',2);
